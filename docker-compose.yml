@@ -1,0 +1,28 @@
+version: "3"
+services:
+
+    appserver:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - "./:/gamehivechallengr"
+        links:
+            - "postgres"
+        ports:
+            - 5000:5000
+        environment:
+            DATABASE_URL: "postgresql://gamehive:gamehive@postgres:5432/gamehive"
+            PYTHONUNBUFFERED: 0
+        restart: always
+
+    postgres:
+        image: "library/postgres:9.6"
+        volumes:
+            -  "./init.sql:/docker-entrypoint-initdb.d/init.sql"
+        environment:
+            POSTGRES_USER: "gamehive"
+            POSTGRES_PASSWORD: "gamehive"
+
+        expose:
+            - "5432"
